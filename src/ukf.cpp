@@ -220,7 +220,7 @@ void UKF::UpdateLidar(const MeasurementPackage& meas_package) {
 	std::cout << "Updated state covariance P: " << std::endl << P_ << std::endl;
 
 	NIS_lidar_ = z.transpose() * S.inverse() * z;
-//    NIS_lidar_file_ << meas_package.timestamp_<<","<<NIS_lidar_;
+    NIS_lidar_file_ << meas_package.timestamp_<<","<<NIS_lidar_;
 }
 ///**
 // * Updates the state and the state covariance matrix using a radar measurement.
@@ -281,7 +281,7 @@ void UKF::UpdateRadar(const MeasurementPackage& meas_package) {
 	  //*x_out = x_;
 	  //*P_out = P_;
 	  NIS_radar_ = z.transpose() * S.inverse() * z;
-//	  NIS_radar_file_ << meas_package.timestamp_<<","<<NIS_radar_;
+	  NIS_radar_file_ << meas_package.timestamp_<<","<<NIS_radar_;
 }
 
 void UKF::Initialize(const MeasurementPackage& measurement_pack){
