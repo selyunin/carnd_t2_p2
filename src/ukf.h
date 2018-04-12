@@ -55,19 +55,40 @@ public:
   ///* Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
-  ///* Weights of sigma points
-  VectorXd weights_;
-
   ///* State dimension
   int n_x_;
 
   ///* Augmented state dimension
   int n_aug_;
 
+  ///* Number of sigma points
+  int n_sig_;
+
   ///* Sigma point spreading parameter
   double lambda_;
 
+  ///* Sigma point weights
+  VectorXd sig_weights_;
 
+  // previous timestamp
+  long long previous_timestamp_;
+
+  ///* augmented sigma points matrix
+  MatrixXd Xsig_aug_;
+
+  MatrixXd R_radar_;
+
+  MatrixXd R_lidar_;
+
+  ///* NIS for radar
+  double NIS_radar_;
+//  std::vector<double> NIS_radar_vec_;
+  std::ofstream NIS_radar_file_;
+
+  ///* NIS for lidar
+  double NIS_lidar_;
+//  std::vector<double> NIS_lidar_vec_;
+  std::ofstream NIS_lidar_file_;
   /**
    * Constructor
    */
@@ -95,13 +116,54 @@ public:
    * Updates the state and the state covariance matrix using a laser measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateLidar(MeasurementPackage meas_package);
+  void UpdateLidar(const MeasurementPackage& meas_package);
 
   /**
    * Updates the state and the state covariance matrix using a radar measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateRadar(MeasurementPackage meas_package);
+  void UpdateRadar(const MeasurementPackage& meas_package);
+
+  /**
+   * Initialized the state with the first measurement
+   * @param meas_package The measurement at k+1
+   */
+  void Initialize(const MeasurementPackage& measurement_pack);
+
+  /**
+   * Calculates weights of the sigma points
+   */
+  void CalculateWeights();
+
+  /**
+   * Calculates sigma points for updated state mean and covariance
+   */
+  void AugmentedSigmaPoints();
+
+  /**
+   * Calculates prediction for sigma points: i.e. passes
+   * the sigma points through process model
+   */
+  void SigmaPointPrediction(double delta_t);
+
+  /**
+   * From predicted sigma points, calculates state mean
+   * and covariance
+   */
+  void PredictMeanAndCovariance();
+
+  /**
+   * Calculates sigma points for radar measurements from sigma points,
+   * updates predicted measurement mean and covariance
+   */
+  void PredictRadarMeasurement(VectorXd& z_pred, MatrixXd& S, MatrixXd& Zsig);
+
+  /**
+   * Calculates sigma points for lidar measurements from sigma points,
+   * updates predicted measurement mean and covariance
+   */
+  void PredictLidarMeasurement(VectorXd& z_pred, MatrixXd&S, MatrixXd& Zsig);
+
 };
 
 #endif /* UKF_H */
