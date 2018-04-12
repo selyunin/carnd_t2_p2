@@ -2,9 +2,8 @@
 Self-Driving Car Engineer Nanodegree Program
 
 
-In this project implements an Unscented Kalman Filter to estimate the
-state of a moving object of interest with noisy lidar and radar
-measurements. 
+Goal of the project is to implement an Unscented Kalman Filter for estimating the
+state of a moving object with noisy lidar and radar measurements. 
 In order to satisfy the project rubric requirements, 
 UKF with RMSE below the pre-defined bound has been devised.
 
